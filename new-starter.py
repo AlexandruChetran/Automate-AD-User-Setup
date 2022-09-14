@@ -3,6 +3,7 @@ from tkinter import filedialog, ttk
 import tkinter as tk
 import docx, os, time
 
+#Active Directory library with pre-configured Powershell script in which the relevant variables will be replaced
 def active_directory():
 
     remote_mailbox_address = '@onecwmail.onmicrosoft.com'
@@ -55,7 +56,8 @@ def active_directory():
                                  f'| Select-Object -ExpandProperty memberof \n'
     ad_user_groups_copied = "foreach($group in $SourceUsersMemberOf){Get-ADGroup -Identity $group | Select-Object -ExpandProperty samAccountName}\n"
     space_between_rows = "\n"
-
+    
+    
     with open('powershell_output.ps1', 'w') as module:
         # module.write(new_remote_mailbox)
         module.write(import_AD_module)
@@ -87,7 +89,7 @@ def active_directory():
         module.write(ad_user_department)
         module.write(ad_user_email_address)
 
-
+# New User main attributes that have to be extracted from the docx file
 class new_starter:
     def __init__(self, first_name,last_name,job_title,email_address,
                  line_manager,street_address,office_address,department,clone):
@@ -115,7 +117,7 @@ class new_starter:
                f"Employee Clone: {self.clone}"
 
 
-
+# File dialog for opening the docx files.
 def openFile():
     root = tk.Tk()
     frm = ttk.Frame(root,padding=10)
@@ -130,7 +132,8 @@ def openFile():
     return filepath
 # Splits the Word  document into a string
 
-
+# Takes the input a a file path from the openFile function above
+# Iterates through each paragraph then returns a string with the relevant data
 def word_document_input(docx_file):
     doc = docx.Document(docx_file)
     completedText = []
@@ -141,7 +144,7 @@ def word_document_input(docx_file):
     result = [x.strip(' ') for x in divide_text]
     return result
 
-
+# Extracts the relevant user attributes from the docx document
 def extract_user_info():
    text = word_document_input(openFile())
    extract_user_attributes = []
